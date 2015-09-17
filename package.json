@@ -1,0 +1,27 @@
+{
+  "name": "utube",
+  "version": "1.0.0",
+  "description": "Youtube video player class.",
+  "main": "utube.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://nicbell@github.com/nicbell/utube.git"
+  },
+  "keywords": [
+    "youtube",
+    "utube",
+    "video"
+  ],
+  "author": "Nic Bell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicbell/utube/issues"
+  },
+  "homepage": "https://github.com/nicbell/utube#readme",
+  "dependencies": {
+    "object-assign": "^4.0.1"
+  }
+}
