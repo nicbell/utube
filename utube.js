@@ -6,9 +6,17 @@
 
 var objectAssign = require('object-assign');
 
-function UTube(element) {
+function UTube(element, options) {
 	this.element = element;
+	
+	// Options parameter
+	if (options) {
+		this.options = objectAssign({}, this.options, options);
+	}
+	
+	// Options from data attribute
 	this.options = objectAssign({}, this.options, JSON.parse(this.element.getAttribute('data-utube-options') || {}));
+	
 	this.addEvents();
 }
 
@@ -26,14 +34,14 @@ UTube.prototype.options = {
 	iv_load_policy: 3,
 	loop: 0,
 	modestbranding: 1,
-	mobile: false,
 	origin: document.domain, // Should be set to domain
 	playsinline: 0,
 	rel: 0,
 	showinfo: 0,
 	start: null,
 	theme: 'dark',
-	wmode: 'opaque'
+	wmode: 'opaque',
+	dispatch: [25, 50, 75, 100]
 };
 
 UTube.prototype.addEvents = function () {
@@ -94,7 +102,7 @@ UTube.prototype.createPlayer = function () {
 			'showinfo': this.options.showinfo,
 			'start': this.options.start,
 			'theme': this.options.theme,
-			'wmode': 'opaque'		
+			'wmode': 'opaque'
 		}
 	});
 
@@ -104,31 +112,30 @@ UTube.prototype.createPlayer = function () {
 
 UTube.prototype.onStateChange = function (e) {
 	var state = e.data,
-		percentages = [25, 50, 75, 100],
 		trackVideoPercentage = function () {
 			var currentTime = this.player.getCurrentTime(),
 				duration = this.player.getDuration();
 
-			for (var index = 0; index < percentages.length; index++) {
-				var percentage = percentages[index];
+			for (var index = 0; index < this.options.dispatch.length; index++) {
+				var percentage = this.options.dispatch[index];
 
 				if (currentTime >= (duration * percentage / 100) && this.videoPercentage < percentage) {
 					this.videoPercentage = percentage;
-					this.trak(percentage + '%');
+					this.dispatchEvent(percentage + '%');
 				}
 			}
 		};
 
 	if (state == YT.PlayerState.PLAYING) {
-		this.trak('PLAYING');
+		this.dispatchEvent('PLAYING');
 		this.playerInterval = setInterval(trackVideoPercentage.bind(this), 200);
 	}
 	else if (state == YT.PlayerState.PAUSED) {
-		this.trak('PAUSED');
+		this.dispatchEvent('PAUSED');
 		clearInterval(this.playerInterval);
 	}
 	else if (state == YT.PlayerState.ENDED) {
-		this.trak('ENDED');
+		this.dispatchEvent('ENDED');
 		clearInterval(this.playerInterval);
 		this.close();
 	}
@@ -137,8 +144,15 @@ UTube.prototype.onStateChange = function (e) {
 	}
 }
 
-UTube.prototype.trak = function (status) {
-	console.log('UTube', status, this.player.getVideoData().title);
+UTube.prototype.dispatchEvent = function (status) {
+	var event = document.createEvent('Event');
+	event.initEvent('utube', true, true);
+	event.data = {
+		title: this.player.getVideoData().title,
+		status: status
+	};
+
+	window.dispatchEvent(event);
 }
 
 UTube.prototype.pause = function () {
