@@ -16,7 +16,6 @@ var UTube = require('utube');
 var player = new UTube(document.querySelector('.player'));
 ```
 Options as a parameter.
-Using data attribute for options.
 ```html
 <div class="player"></div>
 ```
