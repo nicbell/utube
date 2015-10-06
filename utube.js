@@ -1,11 +1,16 @@
 /**
- * UTube class
- * 
- * Author: Nic Bell
+ * UTube
+ * @module
+ * @author Nic Bell
  */
 
 var objectAssign = require('object-assign');
 
+/**
+ * @constructor
+ * @param {Element} element - Element where player is created.
+ * @param {Object} options - UTube options
+ */
 function UTube(element, options) {
 	this.element = element;
 	
@@ -16,7 +21,7 @@ function UTube(element, options) {
 	
 	// Options from data attribute
 	this.options = objectAssign({}, this.options, JSON.parse(this.element.getAttribute('data-utube-options') || {}));
-	
+
 	this.addEvents();
 }
 
@@ -144,14 +149,32 @@ UTube.prototype.onStateChange = function (e) {
 	}
 }
 
+/**
+ * Dispatch an event
+ * @fires utube
+ */
 UTube.prototype.dispatchEvent = function (status) {
-	var event = document.createEvent('Event');
-	event.initEvent('utube', true, true);
-	event.data = {
-		title: this.player.getVideoData().title,
-		status: status
-	};
+	var event,
+		detail = {
+			title: this.player.getVideoData().title,
+			status: status
+		};
 
+	if (CustomEvent) {
+		event = new CustomEvent('utube', { detail: detail });
+	}
+	else {
+		event = document.createEvent('Event');
+		event.initEvent('utube', true, true);
+		event.detail = detail;
+	}
+
+	/**
+	 * @event utube
+	 * @type {object}
+	 * @property {string} title - Video title
+	 * @property {string} status - Video status
+	 */
 	window.dispatchEvent(event);
 }
 

@@ -40,7 +40,7 @@ Default: `[25, 50, 75, 100]`
 Percentage points at which to dispatch `utube` events. `PLAYING`, `PAUSE` and `ENDED` events are also automatically dispatched.
 ```js
 window.addEventListener('utube', function (e) {
-	console.log(e.data);
+	console.log(e.detail);
 });
 ```
 
