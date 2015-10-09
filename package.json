@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/nicbell/utube#readme",
   "dependencies": {
+    "custom-event-polyfill": "^0.2.1",
     "object-assign": "^4.0.1"
   }
 }
