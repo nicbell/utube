@@ -32,7 +32,7 @@ UTube.prototype.options = {
     autohide: 1,
     autoplay: 1,
     color: 'white',
-    controls: 1,
+    controls: 2,
     cc_load_policy: 0,
     disablekb: 0,
     enablejsapi: 1,
