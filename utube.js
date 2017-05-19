@@ -159,7 +159,8 @@ UTube.prototype.dispatchEvent = function (status) {
     var event = new CustomEvent('utube', {
         detail: {
             title: this.player.getVideoData().title,
-            status: status
+            status: status,
+            id: this.options.id
         }
     });
 
