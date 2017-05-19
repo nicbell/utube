@@ -48,6 +48,7 @@ UTube.prototype.options = {
     start: null,
     theme: 'dark',
     wmode: 'opaque',
+    hl: 'en',
     dispatch: [25, 50, 75, 100]
 };
 
@@ -109,7 +110,8 @@ UTube.prototype.createPlayer = function () {
             'showinfo': this.options.showinfo,
             'start': this.options.start,
             'theme': this.options.theme,
-            'wmode': 'opaque'
+            'wmode': 'opaque',
+            'hl': this.options.hl
         }
     });
 
